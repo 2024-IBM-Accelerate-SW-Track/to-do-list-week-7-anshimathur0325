@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const fsPromises = require("fs").promises;
 //const fs = require("fs");
 const todoDBName = "tododb";
-const useCloudant = false;
+const useCloudant = true;
 const basicAuth = require("express-basic-auth");
 var { authenticator, upsertUser, cookieAuth } = require("./authentication");
 const auth = basicAuth({
@@ -56,7 +56,6 @@ app.get("/", (request, response) => {
 
 //add new item to json file
 app.post("/add/item", cookieAuth,addItem)
-
 async function addItem (request, response) {
     try {
         // Converting Javascript object (Task Item) to a JSON string
@@ -68,7 +67,7 @@ async function addItem (request, response) {
           ID: id,
           Task: task,
           Current_date: curDate,
-          Due_date: dueDate
+          Due_date: dueDate,
         }
         
         if (useCloudant) {
@@ -119,7 +118,7 @@ async function getItems (request, response) {
     var listofdocs;
     await client.postAllDocs({
         db: todoDBName,
-        includeDocs: true
+        includeDocs: true,
     }).then(response => {
         listofdocs=response.result;
         });
@@ -146,7 +145,7 @@ async function searchItems (request, response) {
             db: todoDBName,
             ddoc: 'newdesign',
             query: 'task:'+searchField,
-            index: 'newSearch'
+            index: 'newSearch',
           }).then(response => {
             search_results=response.result;
             console.log(response.result);
